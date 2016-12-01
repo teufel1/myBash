@@ -1,0 +1,14 @@
+function yd() { youtube-dl --extract-audio --audio-format mp3 -l "$@" ; }
+function text() { grep -Hrn "$@" . ; }
+function ram() { free && sync && echo 3 > /proc/sys/vm/drop_caches && free ; }
+function remove() { awk '!x[$0]++' "$@" ; }
+function encode() { echo -n $@ | perl -pe's/([^-_.~A-Za-z0-9])/sprintf("%%%02X", ord($1))/seg' ; }
+function google { Q="$@"; GOOG_URL='https://www.google.de/search?tbs=li:1&q='; AGENT="Mozilla/4.0"; stream=$(curl -A "$AGENT" -skLm 10 "${GOOG_URL}${Q//\ /+}" | grep -oP '\/url\?q=.+?&amp' | sed 's|/url?q=||; s|&amp||'); echo -e "${stream//\%/\x}" ; }
+function yahoo() { firefox http://search.yahoo.com/search?p="`encode $@`" ; }
+function bing() { firefox http://www.bing.com/search?q="`encode $@`" ; }
+function amazon() { firefox http://www.amazon.com/s/ref=nb_ss?field-keywords="`encode $@`" ; }
+function wiki() { firefox http://en.wikipedia.org/w/index.php?search="`encode $@`" ; }
+function pyt() { youtube-dl -q --max-downloads 1 --no-playlist --default-search ${2:-ytsearch} "$1" -o - | mplayer -vo null /dev/fd/3 3<&0 </dev/tty ; }
+function mo() { mojo get $@ 'a[href]' attr href ; }
+function all() { wget --random-wait -r -p -e robots=off -U mozilla "$@" ; }
+function tree() { ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/' ; }
